@@ -1,0 +1,39 @@
+---
+import Layout from '@layouts/Layout.astro';
+
+// Lido da variável de ambiente PUBLIC_CALENDAR_ID.
+// Localmente: defina em .env (copie .env.example)
+// No GitHub Actions: defina em Settings → Secrets → Actions → PUBLIC_CALENDAR_ID
+const CALENDAR_ID = import.meta.env.PUBLIC_CALENDAR_ID ?? '';
+const calendarSrc = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(CALENDAR_ID)}&ctz=America%2FSao_Paulo&hl=pt-BR&showTitle=0&showNav=1&showPrint=0&showTabs=1&showCalendars=0`;
+---
+<Layout
+  title="Agenda"
+  description="Agenda de eventos do Centro de Estudos Rousseau do Brasil."
+>
+  <article class="page-content">
+    <h1>Agenda</h1>
+    <p>
+      Confira abaixo os eventos passados e futuros promovidos pelo Centro de Estudos Rousseau.
+    </p>
+    <div class="calendar-embed">
+      {!CALENDAR_ID ? (
+        <p style="color: #8b1a1a; font-style: italic; padding: 1rem; border: 1px dashed #d4c9a8;">
+          <strong>Atenção:</strong> Defina a variável de ambiente <code>PUBLIC_CALENDAR_ID</code>.
+          Veja o <code>.env.example</code> para instruções.
+        </p>
+      ) : (
+        <iframe
+          src={calendarSrc}
+          style="border:0"
+          width="800"
+          height="600"
+          frameborder="0"
+          scrolling="no"
+          title="Agenda do Centro de Estudos Rousseau"
+          loading="lazy"
+        ></iframe>
+      )}
+    </div>
+  </article>
+</Layout>

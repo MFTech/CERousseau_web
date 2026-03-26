@@ -1,0 +1,57 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+const entry = await getEntry('atelie', '2o_atelie_de_pesquisa');
+const { Content } = await entry.render();
+
+// Extrair o ID do vídeo YouTube a partir da URL completa
+function getYoutubeId(url: string): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    // Formato: youtube.com/watch?v=ID
+    if (u.hostname.includes('youtube.com')) {
+      return u.searchParams.get('v');
+    }
+    // Formato: youtu.be/ID
+    if (u.hostname === 'youtu.be') {
+      return u.pathname.slice(1);
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+const youtubeId = entry.data.youtube_url ? getYoutubeId(entry.data.youtube_url) : null;
+---
+<Layout title={entry.data.title}>
+  <article class="page-content">
+    <h1>{entry.data.title}</h1>
+    <Content />
+
+    {youtubeId && (
+      <div class="video-embed">
+        <iframe
+          src={`https://www.youtube.com/embed/${youtubeId}`}
+          title="Vídeo do Ateliê de Pesquisa"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          width="560"
+          height="315"
+          frameborder="0"
+          loading="lazy"
+        ></iframe>
+      </div>
+    )}
+
+    {entry.data.registration_url && (
+      <p style="margin-top: 1.5rem;">
+        <a href={entry.data.registration_url} class="btn-primary" target="_blank" rel="noopener">
+          Inscreva-se gratuitamente
+        </a>
+      </p>
+    )}
+  </article>
+</Layout>

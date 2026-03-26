@@ -1,0 +1,60 @@
+---
+import Layout from '@layouts/Layout.astro';
+
+// Lido da variável de ambiente PUBLIC_FORMSPREE_ID.
+// Localmente: defina em .env (copie .env.example)
+// No GitHub Actions: defina em Settings → Secrets → Actions → PUBLIC_FORMSPREE_ID
+const FORMSPREE_ID = import.meta.env.PUBLIC_FORMSPREE_ID ?? '';
+const formAction = `https://formspree.io/f/${FORMSPREE_ID}`;
+---
+<Layout
+  title="Fale Conosco"
+  description="Entre em contato com o Centro de Estudos Rousseau do Brasil."
+>
+  <article class="page-content">
+    <h1>Fale Conosco</h1>
+
+    {!FORMSPREE_ID && (
+      <p style="color: #8b1a1a; font-style: italic; margin-bottom: 1rem; padding: 0.75rem 1rem; border: 1px dashed #d4c9a8;">
+        <strong>Atenção:</strong> Defina a variável de ambiente <code>PUBLIC_FORMSPREE_ID</code>.
+        Crie uma conta gratuita em <a href="https://formspree.io" target="_blank" rel="noopener">formspree.io</a>
+        e veja o <code>.env.example</code> para instruções.
+      </p>
+    )}
+
+    <form
+      action={formAction}
+      method="POST"
+      class="contact-form"
+      novalidate
+    >
+      <label>
+        Nome
+        <input type="text" name="nome" placeholder="Seu nome completo" required />
+      </label>
+
+      <label>
+        Seu e-mail
+        <input type="email" name="email" placeholder="seu@email.com" required />
+      </label>
+
+      <label>
+        Assunto
+        <input type="text" name="assunto" placeholder="Assunto da mensagem" required />
+      </label>
+
+      <label>
+        Sua Mensagem
+        <textarea name="mensagem" rows="7" placeholder="Escreva sua mensagem aqui..." required></textarea>
+      </label>
+
+      <!-- Campo honeypot anti-spam do Formspree -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <!-- Redirecionar para página de agradecimento após envio (opcional) -->
+      <!-- <input type="hidden" name="_next" value="/obrigado" /> -->
+
+      <button type="submit" class="btn-submit">Enviar</button>
+    </form>
+  </article>
+</Layout>

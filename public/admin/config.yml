@@ -1,0 +1,86 @@
+# =============================================================
+# Decap CMS — Configuração do Centro de Estudos Rousseau
+# =============================================================
+#
+# ANTES DE FAZER O DEPLOY, substitua os valores marcados com
+# SUBSTITUA_AQUI abaixo. Veja o README.md para instruções
+# detalhadas sobre como criar o GitHub OAuth App.
+# =============================================================
+
+backend:
+  name: github
+  repo: MFTech/CERousseau_web              # Ex: CERousseauBrasil/CERousseau_web
+  branch: main
+  base_url: https://api.decapch.app  # Proxy PKCE gratuito (sem necessidade de servidor)
+  auth_type: pkce
+  app_id: Ov23liGbNjTB9NtQuyeS  # Client ID do GitHub OAuth App
+
+# URL do site publicado (necessária para o CMS funcionar corretamente)
+site_url: https://MFTech.github.io/CERousseau_web
+display_url: https://MFTech.github.io/CERousseau_web
+
+# Pasta onde as mídias enviadas pelo CMS serão salvas no repositório
+media_folder: "public/uploads"
+
+# Caminho público das mídias (URL relativa ao site)
+# Se o site estiver em subpath (ex: /REPO_NAME), ajuste para:
+#   public_folder: "/REPO_NAME/uploads"
+public_folder: "/CERousseau_web/uploads"
+
+# =============================================================
+# Coleções de Conteúdo
+# =============================================================
+
+collections:
+
+  # ---------------------------
+  # Páginas principais
+  # ---------------------------
+  - name: "pages"
+    label: "Páginas"
+    label_singular: "Página"
+    folder: "src/content/pages"
+    extension: "md"
+    format: "frontmatter"
+    create: false
+    delete: false
+    fields:
+      - label: "Título"
+        name: "title"
+        widget: "string"
+      - label: "Conteúdo"
+        name: "body"
+        widget: "markdown"
+        hint: "Use a barra de ferramentas acima para formatar o texto."
+
+  # ---------------------------
+  # Ateliê de Pesquisa
+  # ---------------------------
+  - name: "atelie"
+    label: "Ateliê de Pesquisa"
+    label_singular: "Edição do Ateliê"
+    folder: "src/content/atelie"
+    extension: "md"
+    format: "frontmatter"
+    create: false
+    delete: false
+    fields:
+      - label: "Título"
+        name: "title"
+        widget: "string"
+      - label: "URL do Vídeo no YouTube"
+        name: "youtube_url"
+        widget: "string"
+        required: false
+        hint: "Cole o link completo do vídeo. Ex: https://www.youtube.com/watch?v=XXXXXXXXXXX"
+        pattern:
+          - '^(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/).+'
+          - "URL inválida. Use o formato: https://www.youtube.com/watch?v=ID_DO_VIDEO"
+      - label: "URL de Inscrição"
+        name: "registration_url"
+        widget: "string"
+        required: false
+        hint: "Link para inscrição no Sympla ou outra plataforma."
+      - label: "Conteúdo"
+        name: "body"
+        widget: "markdown"
