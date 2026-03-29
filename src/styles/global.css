@@ -164,7 +164,7 @@ body {
   display: flex;
 }
 
-/* Teclado: no desktop, qualquer dropdown abre com foco; no mobile, Confabulações usa só .is-open (script). */
+/* Teclado: no desktop, qualquer dropdown abre com foco; no mobile, dropdowns com --toggle usam só .is-open (script). */
 @media (min-width: 769px) {
   .has-dropdown:focus-within .dropdown {
     display: flex;
@@ -417,11 +417,7 @@ main {
     background: #eee;
   }
 
-  .has-dropdown:not(.has-dropdown--confabulacoes):focus-within .dropdown {
-    display: flex;
-  }
-
-  .has-dropdown--confabulacoes.is-open .dropdown {
+  .has-dropdown--toggle.is-open .dropdown {
     display: flex;
   }
 

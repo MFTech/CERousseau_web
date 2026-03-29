@@ -33,7 +33,6 @@ const isMembros = cur === '/membros';
 const isFaleConosco = cur === '/fale-conosco';
 
 const confTriggerActive = isConfabulacoes;
-const atelieTriggerActive = isAtelie;
 ---
 <nav class="site-nav" aria-label="Navegação principal">
   <ul>
@@ -46,10 +45,10 @@ const atelieTriggerActive = isAtelie;
     <li>
       <a href={`${b}/eventos-promovidos`} class:list={[{ 'is-active': isEventos }]} aria-current={isEventos ? 'page' : undefined}>Eventos Promovidos</a>
     </li>
-    <li class="has-dropdown has-dropdown--confabulacoes" data-dropdown-confabulacoes>
+    <li class="has-dropdown has-dropdown--toggle" data-nav-dropdown>
       <a
         href={`${b}/confabulacoes`}
-        class:list={['confabulacoes-nav-trigger', { 'is-active': confTriggerActive }]}
+        class:list={['nav-dropdown-trigger', { 'is-active': confTriggerActive }]}
         aria-haspopup="true"
         aria-expanded="false"
         aria-controls="menu-confabulacoes"
@@ -67,14 +66,16 @@ const atelieTriggerActive = isAtelie;
         </li>
       </ul>
     </li>
-    <li class="has-dropdown">
+    <li class="has-dropdown has-dropdown--toggle" data-nav-dropdown>
       <a
         href={`${b}/atelie`}
-        class:list={[{ 'is-active': isAtelie }]}
+        class:list={['nav-dropdown-trigger', { 'is-active': isAtelie }]}
         aria-haspopup="true"
         aria-expanded="false"
+        aria-controls="menu-atelie"
+        id="trigger-atelie"
         aria-current={cur === '/atelie' ? 'page' : undefined}>Ateliê de Pesquisa</a>
-      <ul class="dropdown" role="menu">
+      <ul class="dropdown" role="menu" id="menu-atelie" aria-labelledby="trigger-atelie">
         <li role="none">
           <a
             href={`${b}/atelie/segundo`}
@@ -106,48 +107,64 @@ const atelieTriggerActive = isAtelie;
 <script>
   (function () {
     const mqDesktop = window.matchMedia('(min-width: 769px)');
-    const li = document.querySelector('[data-dropdown-confabulacoes]');
-    const trigger = li?.querySelector<HTMLAnchorElement>('.confabulacoes-nav-trigger');
-    if (!li || !trigger) return;
+    const roots = document.querySelectorAll('[data-nav-dropdown]');
 
-    function setExpanded(open: boolean) {
-      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    function setExpanded(li: Element, open: boolean) {
+      const trigger = li.querySelector('.nav-dropdown-trigger');
+      trigger?.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 
-    function isMobile() {
-      return !mqDesktop.matches;
+    function closeAllExcept(targetLi: Element | null) {
+      roots.forEach((li) => {
+        if (li === targetLi) return;
+        li.classList.remove('is-open');
+        setExpanded(li, false);
+      });
     }
 
-    function onTriggerActivate(e: Event) {
-      if (mqDesktop.matches) {
+    roots.forEach((li) => {
+      const trigger = li.querySelector<HTMLAnchorElement>('.nav-dropdown-trigger');
+      if (!trigger) return;
+
+      function onTriggerActivate(e: Event) {
+        if (mqDesktop.matches) {
+          e.preventDefault();
+          return;
+        }
+        if (li.classList.contains('is-open')) {
+          e.preventDefault();
+          return;
+        }
         e.preventDefault();
-        return;
+        closeAllExcept(li);
+        li.classList.add('is-open');
+        setExpanded(li, true);
       }
-      if (li.classList.contains('is-open')) {
-        e.preventDefault();
-        return;
-      }
-      e.preventDefault();
-      li.classList.add('is-open');
-      setExpanded(true);
-    }
 
-    trigger.addEventListener('click', onTriggerActivate);
-    trigger.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (!isMobile() || (e.key !== 'Enter' && e.key !== ' ')) return;
-      onTriggerActivate(e);
+      trigger.addEventListener('click', onTriggerActivate);
+      trigger.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (mqDesktop.matches || (e.key !== 'Enter' && e.key !== ' ')) return;
+        onTriggerActivate(e);
+      });
     });
 
     document.addEventListener('click', (e: MouseEvent) => {
-      if (!isMobile() || !li.classList.contains('is-open')) return;
-      if (li.contains(e.target as Node)) return;
-      li.classList.remove('is-open');
-      setExpanded(false);
+      if (mqDesktop.matches) return;
+      const t = e.target;
+      if (!(t instanceof Node)) return;
+      roots.forEach((li) => {
+        if (!li.classList.contains('is-open')) return;
+        if (li.contains(t)) return;
+        li.classList.remove('is-open');
+        setExpanded(li, false);
+      });
     });
 
     mqDesktop.addEventListener('change', () => {
-      li.classList.remove('is-open');
-      setExpanded(false);
+      roots.forEach((li) => {
+        li.classList.remove('is-open');
+        setExpanded(li, false);
+      });
     });
   })();
 </script>
