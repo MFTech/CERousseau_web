@@ -109,6 +109,31 @@ body {
   outline: none;
 }
 
+.site-nav > ul > li > a.is-active,
+.site-nav > ul > li > button.is-active {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+}
+
+.site-nav > ul > li > a.is-active:hover,
+.site-nav > ul > li > a.is-active:focus {
+  background: #333;
+  color: #fff;
+}
+
+.dropdown li a.is-active {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+}
+
+.dropdown li a.is-active:hover,
+.dropdown li a.is-active:focus {
+  background: #333;
+  color: #fff;
+}
+
 /* Dropdown */
 .has-dropdown {
   position: relative;
@@ -135,9 +160,15 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-.has-dropdown:hover .dropdown,
-.has-dropdown:focus-within .dropdown {
+.has-dropdown:hover .dropdown {
   display: flex;
+}
+
+/* Teclado: no desktop, qualquer dropdown abre com foco; no mobile, Confabulações usa só .is-open (script). */
+@media (min-width: 769px) {
+  .has-dropdown:focus-within .dropdown {
+    display: flex;
+  }
 }
 
 .dropdown li {
@@ -386,7 +417,11 @@ main {
     background: #eee;
   }
 
-  .has-dropdown:focus-within .dropdown {
+  .has-dropdown:not(.has-dropdown--confabulacoes):focus-within .dropdown {
+    display: flex;
+  }
+
+  .has-dropdown--confabulacoes.is-open .dropdown {
     display: flex;
   }
 

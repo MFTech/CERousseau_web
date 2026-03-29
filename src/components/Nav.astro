@@ -4,28 +4,150 @@ interface Props {
 }
 const { base } = Astro.props;
 const b = base.endsWith('/') ? base.slice(0, -1) : base;
+
+/** Caminho atual sem base e sem barra final (exceto raiz `/`). */
+function currentPath(): string {
+  let p = Astro.url.pathname;
+  const rawBase = import.meta.env.BASE_URL;
+  const baseTrim = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
+  if (baseTrim && p.startsWith(baseTrim)) {
+    p = p.slice(baseTrim.length) || '/';
+  }
+  if (!p.startsWith('/')) p = `/${p}`;
+  const trimmed = p.replace(/\/+$/, '');
+  return trimmed === '' ? '/' : trimmed;
+}
+
+const cur = currentPath();
+
+const isHome = cur === '/' || cur === '/sobre';
+const isAgenda = cur === '/agenda';
+const isEventos = cur === '/eventos-promovidos';
+const isConfabulacoes = cur === '/confabulacoes' || cur.startsWith('/confabulacoes/');
+const isConfabulacoesIndex = cur === '/confabulacoes';
+const isAtelie = cur === '/atelie' || cur.startsWith('/atelie/');
+const isAtelieSegundo = cur === '/atelie/segundo';
+const isAtelieAnteriores = cur === '/atelie/anteriores';
+const isPolietica = cur === '/polietica';
+const isMembros = cur === '/membros';
+const isFaleConosco = cur === '/fale-conosco';
+
+const confTriggerActive = isConfabulacoes;
+const atelieTriggerActive = isAtelie;
 ---
 <nav class="site-nav" aria-label="Navegação principal">
   <ul>
-    <li><a href={`${b}/`}>Sobre</a></li>
-    <li><a href={`${b}/agenda`}>Agenda</a></li>
-    <li><a href={`${b}/eventos-promovidos`}>Eventos Promovidos</a></li>
-    <li><a href={`${b}/confabulacoes`}>Confabulações Rousseauistas</a></li>
-    <li class="has-dropdown">
-      <a href={`${b}/atelie`} aria-haspopup="true" aria-expanded="false">
-        Ateliê de Pesquisa
+    <li>
+      <a href={`${b}/`} class:list={[{ 'is-active': isHome }]} aria-current={isHome ? 'page' : undefined}>Sobre</a>
+    </li>
+    <li>
+      <a href={`${b}/agenda`} class:list={[{ 'is-active': isAgenda }]} aria-current={isAgenda ? 'page' : undefined}>Agenda</a>
+    </li>
+    <li>
+      <a href={`${b}/eventos-promovidos`} class:list={[{ 'is-active': isEventos }]} aria-current={isEventos ? 'page' : undefined}>Eventos Promovidos</a>
+    </li>
+    <li class="has-dropdown has-dropdown--confabulacoes" data-dropdown-confabulacoes>
+      <a
+        href={`${b}/confabulacoes`}
+        class:list={['confabulacoes-nav-trigger', { 'is-active': confTriggerActive }]}
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="menu-confabulacoes"
+        id="trigger-confabulacoes"
+      >
+        Confabulações Rousseauistas
       </a>
-      <ul class="dropdown" role="menu">
+      <ul class="dropdown" role="menu" id="menu-confabulacoes" aria-labelledby="trigger-confabulacoes">
         <li role="none">
-          <a href={`${b}/atelie/segundo`} role="menuitem">2º Ateliê de Pesquisa</a>
-        </li>
-        <li role="none">
-          <a href={`${b}/atelie/anteriores`} role="menuitem">Edições Anteriores</a>
+          <a
+            href={`${b}/confabulacoes`}
+            role="menuitem"
+            class:list={[{ 'is-active': isConfabulacoesIndex }]}
+            aria-current={isConfabulacoesIndex ? 'page' : undefined}>Apresentação</a>
         </li>
       </ul>
     </li>
-    <li><a href={`${b}/polietica`}>Poliética</a></li>
-    <li><a href={`${b}/membros`}>Membros</a></li>
-    <li><a href={`${b}/fale-conosco`}>Fale Conosco</a></li>
+    <li class="has-dropdown">
+      <a
+        href={`${b}/atelie`}
+        class:list={[{ 'is-active': isAtelie }]}
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-current={cur === '/atelie' ? 'page' : undefined}>Ateliê de Pesquisa</a>
+      <ul class="dropdown" role="menu">
+        <li role="none">
+          <a
+            href={`${b}/atelie/segundo`}
+            role="menuitem"
+            class:list={[{ 'is-active': isAtelieSegundo }]}
+            aria-current={isAtelieSegundo ? 'page' : undefined}>2º Ateliê de Pesquisa</a>
+        </li>
+        <li role="none">
+          <a
+            href={`${b}/atelie/anteriores`}
+            role="menuitem"
+            class:list={[{ 'is-active': isAtelieAnteriores }]}
+            aria-current={isAtelieAnteriores ? 'page' : undefined}>Edições Anteriores</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href={`${b}/polietica`} class:list={[{ 'is-active': isPolietica }]} aria-current={isPolietica ? 'page' : undefined}>Poliética</a>
+    </li>
+    <li>
+      <a href={`${b}/membros`} class:list={[{ 'is-active': isMembros }]} aria-current={isMembros ? 'page' : undefined}>Membros</a>
+    </li>
+    <li>
+      <a href={`${b}/fale-conosco`} class:list={[{ 'is-active': isFaleConosco }]} aria-current={isFaleConosco ? 'page' : undefined}>Fale Conosco</a>
+    </li>
   </ul>
 </nav>
+
+<script>
+  (function () {
+    const mqDesktop = window.matchMedia('(min-width: 769px)');
+    const li = document.querySelector('[data-dropdown-confabulacoes]');
+    const trigger = li?.querySelector<HTMLAnchorElement>('.confabulacoes-nav-trigger');
+    if (!li || !trigger) return;
+
+    function setExpanded(open: boolean) {
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    function isMobile() {
+      return !mqDesktop.matches;
+    }
+
+    function onTriggerActivate(e: Event) {
+      if (mqDesktop.matches) {
+        e.preventDefault();
+        return;
+      }
+      if (li.classList.contains('is-open')) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      li.classList.add('is-open');
+      setExpanded(true);
+    }
+
+    trigger.addEventListener('click', onTriggerActivate);
+    trigger.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (!isMobile() || (e.key !== 'Enter' && e.key !== ' ')) return;
+      onTriggerActivate(e);
+    });
+
+    document.addEventListener('click', (e: MouseEvent) => {
+      if (!isMobile() || !li.classList.contains('is-open')) return;
+      if (li.contains(e.target as Node)) return;
+      li.classList.remove('is-open');
+      setExpanded(false);
+    });
+
+    mqDesktop.addEventListener('change', () => {
+      li.classList.remove('is-open');
+      setExpanded(false);
+    });
+  })();
+</script>
