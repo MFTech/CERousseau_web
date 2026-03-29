@@ -8,4 +8,4 @@ A Revista Polietica é uma revista eletrônica, semestral, do Centro de estudos 
 
 Em 2018 a Poliética passará a ter publicação quadrimestral, contando com pesquisadores nacionais e estrangeiros reconhecidos na direção de números consagrados a temas específicos.
 
-Acesso à Revista: [www.revistapolietica.com.br](http://www.revistapolietica.com.br)
+Acesso à Revista: [www.polietica.com.br](http://www.polietica.com.br)
