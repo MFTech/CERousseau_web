@@ -4,7 +4,7 @@ youtube_url: ""
 registration_url: "https://www.sympla.com.br/2-atelie-de-pesquisa-do-centro-de-estudos-rousseau__1302072"
 ---
 
-O Centro de Estudos Rousseau (CER) da PUC-SP convida a todos para a segunda edição do seu Ateliê de Pesquisa no dia 26/08/2021 às 18h00.
+O Centro de Estudos Rousseau (CER) convida a todos para a segunda edição do seu Ateliê de Pesquisa no dia 26/08/2021 às 18h00.
 
 ---
 

@@ -8,11 +8,11 @@ title: "Membros"
 - Maria Constança Peres Pissarra (Líder do Grupo) – PUC-SP
 - Alessandro de Lima Francisco – COGEAE – PUC-SP
 - Alain Grosrichard – Université de Genève – UNIGE
+- Barbara Rodrigues Barbosa – UFMA
 - Blaise Bachofen – Université de Cergy-Pontoise
 - Patrice Vermeren – Université Paris 8
 
 **Discentes:**
-- Barbara Rodrigues Barbosa – UNIFESP
 - Caíque Nakayama – PUC-SP
 - Catarina Sodré – PUC-SP
 - Helder Mariani – PUC-SP
