@@ -16,16 +16,15 @@ backend:
   app_id: Ov23liGbNjTB9NtQuyeS  # Client ID do GitHub OAuth App
 
 # URL do site publicado (necessária para o CMS funcionar corretamente)
-site_url: https://MFTech.github.io/CERousseau_web
-display_url: https://MFTech.github.io/CERousseau_web
+site_url: https://cerousseau.com.br
+display_url: https://cerousseau.com.br
 
 # Pasta onde as mídias enviadas pelo CMS serão salvas no repositório
 media_folder: "public/uploads"
 
 # Caminho público das mídias (URL relativa ao site)
-# Se o site estiver em subpath (ex: /REPO_NAME), ajuste para:
-#   public_folder: "/REPO_NAME/uploads"
-public_folder: "/CERousseau_web/uploads"
+# Com domínio próprio (base: '/'): use "/uploads". Em subpath no Pages: "/REPO_NAME/uploads"
+public_folder: "/uploads"
 
 # =============================================================
 # Coleções de Conteúdo
